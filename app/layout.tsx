@@ -25,7 +25,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: 'NoteHub',
-  description: 'NextJS Homework - 8',
+  description: 'NextJS Homework - 9',
   openGraph: {
     title: 'NoteHub',
     description: 'NoteHub - manage your notes',
