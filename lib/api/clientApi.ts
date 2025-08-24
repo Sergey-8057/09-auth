@@ -1,5 +1,6 @@
 import { nextServer } from './api';
 import { User } from '@/types/user';
+import type { NewNoteData, Note } from '@/types/note.ts';
 
 export type RegisterRequest = {
   email: string;
@@ -37,4 +38,55 @@ export const getMe = async () => {
 
 export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout');
+};
+
+export type UpdateUserRequest = {
+  username: string;
+};
+
+export const updateMe = async (payload: UpdateUserRequest) => {
+  const res = await nextServer.patch<User>('/users/me', payload);
+  return res.data;
+};
+
+export interface NotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
+
+export const clientFetchNotes = async (
+  search: string,
+  page: number,
+  perPage: number,
+  tag: string
+) => {
+  const params: Record<string, string | number> = {
+    page,
+    perPage,
+  };
+  const trimmedSearch = search.trim();
+  if (trimmedSearch) {
+    params.search = trimmedSearch;
+  }
+  if (tag !== 'All') {
+    params.tag = tag;
+  }
+
+  const res = await nextServer.get<NotesResponse>('/notes', { params });
+  return res.data;
+};
+
+export const clientFetchNoteById = async (noteId: string) => {
+  const res = await nextServer.get<Note>(`/notes/${noteId}`);
+  return res.data;
+};
+
+export const clientCreateNote = async (noteData: NewNoteData) => {
+  const res = await nextServer.post<Note>('/notes', noteData);
+  return res.data;
+};
+
+export const clientDeleteNote = async (noteId: string) => {
+  const res = await nextServer.delete<Note>(`/notes/${noteId}`);
+  return res.data;
 };

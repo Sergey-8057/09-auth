@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchNotes, NotesResponse } from '@/lib/api/api';
+import { clientFetchNotes, NotesResponse } from '@/lib/api/clientApi';
 import NoteList from '@/components/NoteList/NoteList';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
@@ -45,7 +45,7 @@ export default function NotesClient({
 
   const { data: response } = useQuery<NotesResponse>({
     queryKey: ['notes', search, page, tag],
-    queryFn: () => fetchNotes(search, page, perPage, tag),
+    queryFn: () => clientFetchNotes(search, page, perPage, tag),
     initialData,
     placeholderData: previousData => previousData,
   });

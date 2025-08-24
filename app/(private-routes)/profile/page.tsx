@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Metadata } from 'next';
-
+import { getServerMe } from '@/lib/api/serverApi';
 import css from './ProfilePage.module.css';
 
 export const metadata: Metadata = {
@@ -22,7 +23,12 @@ export const metadata: Metadata = {
   },
 };
 
-const Profile = () => {
+const Profile = async () => {
+  const user = await getServerMe();
+  const username = user?.username ?? 'your_username';
+  const email = user?.email ?? 'user_email@example.com';
+  const avatar = 'https://ac.goit.global/fullstack/react/default-avatar.jpg';
+
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -33,11 +39,18 @@ const Profile = () => {
           </Link>
         </div>
         <div className={css.avatarWrapper}>
-          <img src="Avatar" alt="User Avatar" width={120} height={120} className={css.avatar} />
+          <Image
+            src={avatar}
+            alt="User Avatar"
+            width={120}
+            height={120}
+            className={css.avatar}
+            priority
+          />
         </div>
         <div className={css.profileInfo}>
-          <p>Username: your_username</p>
-          <p>Email: your_email@example.com</p>
+          <p>Username: {username}</p>
+          <p>Email: {email}</p>
         </div>
       </div>
     </main>

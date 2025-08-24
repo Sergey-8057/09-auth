@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { fetchNotes } from '@/lib/api/api';
+import { serverFetchNotes } from '@/lib/api/serverApi';
 import NotesClient from './Notes.client';
 
 type Props = {
@@ -37,7 +37,7 @@ export default async function NotesPage({ params }: Props) {
   const search = '';
   const page = 1;
   const perPage = 12;
-  const initialData = await fetchNotes(search, page, perPage, tag);
+  const initialData = await serverFetchNotes(search, page, perPage, tag);
 
   return (
     <NotesClient initialData={initialData} initialSearch={search} initialPage={page} tag={tag} />

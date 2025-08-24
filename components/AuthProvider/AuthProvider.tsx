@@ -1,29 +1,59 @@
 'use client';
 
-import { checkSession, getMe } from '@/lib/api/clientApi';
+import { useEffect, useState } from 'react';
+import { checkSession, getMe, logout } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
-import { useEffect } from 'react';
+import Loading from '@/app/loading';
 
-type Props = { children: React.ReactNode };
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [checking, setChecking] = useState(true);
 
-const AuthProvider = ({ children }: Props) => {
   const setUser = useAuthStore(state => state.setUser);
   const clearIsAuthenticated = useAuthStore(state => state.clearIsAuthenticated);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const isAuthenticated = await checkSession();
-      if (isAuthenticated) {
+    let canceled = false;
+
+    const verify = async () => {
+      try {
+        const session = await checkSession();
+        if (canceled) return;
+
+        if (!session) {
+          clearIsAuthenticated();
+          return;
+        }
+
         const user = await getMe();
-        if (user) setUser(user);
-      } else {
-        clearIsAuthenticated();
+        if (canceled) return;
+
+        if (user) {
+          setUser(user);
+        } else {
+          clearIsAuthenticated();
+        }
+      } catch {
+        if (!canceled) {
+          clearIsAuthenticated();
+          await logout();
+        }
+      } finally {
+        if (!canceled) {
+          setChecking(false);
+        }
       }
     };
-    fetchUser();
+
+    verify();
+
+    return () => {
+      canceled = true;
+    };
   }, [setUser, clearIsAuthenticated]);
 
-  return children;
-};
+  if (checking) {
+    return <Loading />;
+  }
 
-export default AuthProvider;
+  return <>{children}</>;
+}
