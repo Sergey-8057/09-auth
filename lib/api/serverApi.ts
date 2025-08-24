@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { nextServer } from './api';
 import { User } from '@/types/user';
-import type { NewNoteData, Note } from '@/types/note.ts';
+import type { Note } from '@/types/note.ts';
 
 async function cookieHeader(): Promise<string> {
   const cookieStore = await cookies();
