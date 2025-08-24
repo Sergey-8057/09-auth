@@ -60,6 +60,8 @@ export const serverFetchNotes = async (
 };
 
 export const serverFetchNoteById = async (noteId: string) => {
-  const res = await nextServer.get<Note>(`/notes/${noteId}`);
+  const res = await nextServer.get<Note>(`/notes/${noteId}`, {
+    headers: { cookie: await cookieHeader() },
+  });
   return res.data;
 };

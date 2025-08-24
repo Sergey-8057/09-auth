@@ -6,18 +6,20 @@ import AuthNavigation from '../AuthNavigation/AuthNavigation';
 export default function Header() {
   return (
     <header className={styles.header}>
-      <Link href="/" aria-label="Home">
+      <Link href="/" aria-label="Home" className={styles.headerLink}>
         NoteHub
       </Link>
       <nav aria-label="Main Navigation">
         <ul className={styles.navigation}>
-          <li>
-            <Link href="/">Home</Link>
+          <li className={styles.navigationItem}>
+            <Link href="/" className={styles.navigationLink}>
+              Home
+            </Link>
           </li>
-          <li>
+          <li className={styles.navigationItem}>
             <TagsMenu />
           </li>
-            <AuthNavigation />
+          <AuthNavigation />
         </ul>
       </nav>
     </header>
